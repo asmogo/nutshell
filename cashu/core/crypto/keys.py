@@ -5,7 +5,6 @@ from typing import Dict, List, Optional
 
 from bip32 import BIP32
 
-from ..core.base import Unit
 from .secp import PrivateKey, PublicKey
 
 
@@ -64,7 +63,7 @@ def derive_keyset_id(keys: Dict[int, PublicKey]):
 
 def derive_keyset_id_v2(
     keys: Dict[int, PublicKey], 
-    unit: Unit, 
+    unit: str, 
     final_expiry: Optional[int] = None
 ) -> str:
     """
@@ -72,7 +71,7 @@ def derive_keyset_id_v2(
     
     Args:
         keys: Dictionary mapping amounts to public keys
-        unit: The unit of the keyset (e.g., Unit.sat, Unit.usd)
+        unit: The unit of the keyset
         final_expiry: Optional unix epoch timestamp for keyset expiration
         
     Returns:
@@ -85,7 +84,7 @@ def derive_keyset_id_v2(
     keyset_id_bytes = b"".join([p.serialize() for p in sorted_keys.values()])
     
     # add the lowercase unit string to the byte array (no separator necessary since we hash)
-    keyset_id_bytes += f"unit:{unit.name}".encode("utf-8")
+    keyset_id_bytes += f"unit:{unit}".encode("utf-8")
     
     # only include final_expiry if provided (per spec discussion)
     if final_expiry is not None:
