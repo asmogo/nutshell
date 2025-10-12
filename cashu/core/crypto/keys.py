@@ -1,14 +1,12 @@
 import base64
 import hashlib
 import random
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from bip32 import BIP32
 
+from ..core.base import Unit
 from .secp import PrivateKey, PublicKey
-
-if TYPE_CHECKING:
-    from ..base import Unit
 
 
 def derive_keys(mnemonic: str, derivation_path: str, amounts: List[int]):
@@ -66,7 +64,7 @@ def derive_keyset_id(keys: Dict[int, PublicKey]):
 
 def derive_keyset_id_v2(
     keys: Dict[int, PublicKey], 
-    unit: "Unit", 
+    unit: Unit, 
     final_expiry: Optional[int] = None
 ) -> str:
     """
