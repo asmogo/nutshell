@@ -108,7 +108,7 @@ def derive_keyset_short_id(keyset_id: str) -> str:
         Short keyset ID (version byte + first 7 bytes of hash)
     """
     # For version 00, keep existing behavior (already short)
-    if keyset_id.startswith("00"):
+    if is_base64_keyset_id(keyset_id) or keyset_id.startswith("00"):
         return keyset_id
     
     # For version 01, return first 16 chars (8 bytes in hex)
@@ -139,7 +139,7 @@ def is_base64_keyset_id(keyset_id: str) -> bool:
     
     # Try to decode as base64 to confirm
     try:
-        base64.b64decode(keyset_id)
+        base64.b64decode(keyset_id, validate=True)
         return True
     except Exception:
         return False
