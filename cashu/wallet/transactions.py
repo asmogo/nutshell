@@ -35,17 +35,7 @@ class WalletTransactions(SupportsDb, SupportsKeysets):
             if p.id in self.keysets:
                 fees_ppk.append(self.keysets[p.id].input_fee_ppk)
             else:
-                # Try to find keyset by matching short ID (v2 short IDs are 16 chars starting with '01')
-                if p.id.startswith("01") and len(p.id) == 16:
-                    matching_keysets = [k for k in self.keysets.values() if k.id.startswith(p.id)]
-                    if matching_keysets:
-                        fees_ppk.append(matching_keysets[0].input_fee_ppk)
-                    else:
-                        logger.warning(f"Keyset {p.id} not found in wallet, assuming 0 fee")
-                        fees_ppk.append(0)
-                else:
-                    logger.warning(f"Keyset {p.id} not found in wallet, assuming 0 fee")
-                    fees_ppk.append(0)
+                raise Exception(f"no keyset with ID: {p.id}")
         fees = max((sum(fees_ppk) + 999) // 1000, 0)
         return fees
 
@@ -55,17 +45,7 @@ class WalletTransactions(SupportsDb, SupportsKeysets):
             if p.id in self.keysets:
                 fees_ppk.append(self.keysets[p.id].input_fee_ppk)
             else:
-                # Try to find keyset by matching short ID (v2 short IDs are 16 chars starting with '01')
-                if p.id.startswith("01") and len(p.id) == 16:
-                    matching_keysets = [k for k in self.keysets.values() if k.id.startswith(p.id)]
-                    if matching_keysets:
-                        fees_ppk.append(matching_keysets[0].input_fee_ppk)
-                    else:
-                        logger.warning(f"Keyset {p.id} not found in wallet, assuming 0 fee")
-                        fees_ppk.append(0)
-                else:
-                    logger.warning(f"Keyset {p.id} not found in wallet, assuming 0 fee")
-                    fees_ppk.append(0)
+                raise Exception(f"no keyset with ID: {p.id}")
         return sum(fees_ppk)
 
     def coinselect(
