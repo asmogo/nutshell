@@ -17,9 +17,8 @@ from ..core.db import Database
 from ..wallet.crud import (
     get_keysets,
 )
-from .protocols import SupportsDb, SupportsKeysets
-from ..core.crypto.keys import is_keyset_id_v2
 from .keyset_manager import KeysetManager
+from .protocols import SupportsDb, SupportsKeysets
 
 
 class WalletProofs(SupportsDb, SupportsKeysets):

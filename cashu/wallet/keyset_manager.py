@@ -4,7 +4,6 @@ from loguru import logger
 
 from cashu.core.crypto.keys import (
     derive_keyset_short_id,
-    is_keyset_id_v2,
 )
 
 
