@@ -82,9 +82,7 @@ class WalletProofs(SupportsDb, SupportsKeysets):
         
         Args:
             proofs (List[Proof]): List of proofs whose keyset IDs may need expansion
-        """
-        from cashu.wallet.keyset_manager import KeysetManager
-        
+        """        
         manager = KeysetManager()
         
         # Build a dictionary of all available keysets for this mint
@@ -93,14 +91,9 @@ class WalletProofs(SupportsDb, SupportsKeysets):
         for proof in proofs:
             # Check if this is a v2 short ID (16 chars starting with '01')
             if proof.id.startswith("01") and len(proof.id) == 16:
-                # Expand to full ID
-                try:
-                    full_id = manager.get_full_keyset_id(proof.id, keysets_dict)
-                    logger.debug(f"Expanded short keyset ID {proof.id} -> {full_id}")
-                    proof.id = full_id
-                except (KeyError, ValueError) as e:
-                    logger.warning(f"Could not expand short keyset ID {proof.id}: {e}")
-                    # Leave the ID as-is and let downstream handling deal with it
+                full_id = manager.get_full_keyset_id(proof.id, keysets_dict)
+                logger.debug(f"Expanded short keyset ID {proof.id} -> {full_id}")
+                proof.id = full_id
 
     async def _get_keyset_urls(self, keysets: List[str]) -> Dict[str, List[str]]:
         """Retrieves the mint URLs for a list of keyset id's from the wallet's database.

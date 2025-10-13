@@ -42,8 +42,6 @@ async def redeem_TokenV3(wallet: Wallet, token: TokenV3) -> Wallet:
     """
     if not token.unit:
         # load unit from wallet keyset db
-        # Note: if the keyset ID is a v2 short ID, we might not find it in the db
-        # In that case, we'll just skip setting the unit here and let it be set later
         proof_keyset_id = token.token[0].proofs[0].id
         keysets = await get_keysets(id=proof_keyset_id, db=wallet.db)
         if not keysets and proof_keyset_id.startswith("01") and len(proof_keyset_id) == 16:
@@ -66,8 +64,8 @@ async def redeem_TokenV3(wallet: Wallet, token: TokenV3) -> Wallet:
         logger.trace(f"Keysets in tokens: {' '.join(set(keyset_ids))}")
         await mint_wallet.load_mint()
         
-        # Expand v2 short keyset IDs to full IDs
-        # V2 short IDs are 16 chars (version '01' + 7 bytes), full IDs are 66 chars
+        # Expand short keyset IDs to full IDs
+        # This is a no-op in the case of base64 keysets and v1 keysets
         await mint_wallet._expand_short_keyset_ids(t.proofs)
         
         proofs_to_keep, _ = await mint_wallet.redeem(t.proofs)
