@@ -18,6 +18,8 @@ from ..wallet.crud import (
     get_keysets,
 )
 from .protocols import SupportsDb, SupportsKeysets
+from ..core.crypto.keys import is_keyset_id_v2
+from .keyset_manager import KeysetManager
 
 
 class WalletProofs(SupportsDb, SupportsKeysets):
@@ -259,21 +261,17 @@ class WalletProofs(SupportsDb, SupportsKeysets):
         unit_str = keysets[0].unit.name
 
         tokens: List[TokenV4Token] = []
-        # Use short keyset IDs for v2 keysets to reduce token size
-        from cashu.core.crypto.keys import is_keyset_id_v2
-        from cashu.wallet.keyset_manager import KeysetManager
         manager = KeysetManager()
         for keyset_id in keyset_ids:
             proofs_keyset = [p for p in proofs if p.id == keyset_id]
             tokenv4_proofs = []
             for proof in proofs_keyset:
                 tokenv4_proofs.append(TokenV4Proof.from_proof(proof, include_dleq))
-            keyset_hex = keyset_id
-            if is_keyset_id_v2(keyset_id):
-                # convert to short id for token serialization
-                short_id = manager.get_short_keyset_id(keyset_id)
-                keyset_hex = short_id
-            tokenv4_token = TokenV4Token(i=bytes.fromhex(keyset_hex), p=tokenv4_proofs)
+            
+            # convert to short id for token serialization
+            short_id = manager.get_short_keyset_id(keyset_id)
+                
+            tokenv4_token = TokenV4Token(i=bytes.fromhex(short_id), p=tokenv4_proofs)
             tokens.append(tokenv4_token)
 
         return TokenV4(m=mint_url, u=unit_str, t=tokens, d=memo)

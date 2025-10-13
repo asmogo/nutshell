@@ -31,10 +31,7 @@ class KeysetManager:
         if full_id in self._full_to_short_cache:
             return self._full_to_short_cache[full_id]
 
-        if is_keyset_id_v2(full_id):
-            short_id = derive_keyset_short_id(full_id)
-        else:
-            short_id = full_id
+        short_id = derive_keyset_short_id(full_id)
 
         self._full_to_short_cache[full_id] = short_id
         self._short_to_full_cache[short_id] = full_id

@@ -166,7 +166,7 @@ def get_keyset_id_version(keyset_id: str) -> str:
 
 def is_keyset_id_v2(keyset_id: str) -> bool:
     """Check if a keyset ID is version 2 (starts with '01')."""
-    return keyset_id.startswith("01")
+    return get_keyset_id_version(keyset_id) == '01'
 
 
 def derive_keyset_id_deprecated(keys: Dict[int, PublicKey]):
