@@ -1,8 +1,6 @@
 name: Docker Build
 
-on:
-  release:
-    types: [released]
+on: push
 
 jobs:
   build-and-push:
